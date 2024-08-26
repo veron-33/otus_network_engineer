@@ -45,7 +45,7 @@
 <tbody>
 
 <tr>
-<td rowspan="4">R14</td>
+<td rowspan="5">R14</td>
 <td>e0/0</td>
 <td>10.1.1.1/30</td>
 </tr>
@@ -61,9 +61,13 @@
 <td>e0/3</td>
 <td>10.1.0.1/30</td>
 </tr>
+<tr>
+<td>e1/0</td>
+<td>10.1.0.5/30</td>
+</tr>
 
 <tr>
-<td rowspan="4">R15</td>
+<td rowspan="5">R15</td>
 <td>e0/0</td>
 <td>10.1.4.1/30</td>
 </tr>
@@ -79,9 +83,13 @@
 <td>e0/3</td>
 <td>10.1.5.1/30</td>
 </tr>
+<tr>
+<td>e1/0</td>
+<td>10.1.0.6/30</td>
+</tr>
 
 <tr>
-<td rowspan="6">R12</td>
+<td rowspan="7">R12</td>
 <td>e0/0</td>
 <td>10.1.7.1/24</td>
 </tr>
@@ -105,9 +113,13 @@
 <td>e0/1 (HSRP)</td>
 <td>10.1.6.254</td>
 </tr>
+<tr>
+<td>e1/0</td>
+<td>10.1.0.9/30</td>
+</tr>
 
 <tr>
-<td rowspan="6">R13</td>
+<td rowspan="7">R13</td>
 <td>e0/0</td>
 <td>10.1.6.1/24</td>
 </tr>
@@ -130,6 +142,10 @@
 <tr>
 <td>e0/1 (HSRP)</td>
 <td>10.1.7.254</td>
+</tr>
+<tr>
+<td>e1/0</td>
+<td>10.1.0.10/30</td>
 </tr>
 
 <tr>
