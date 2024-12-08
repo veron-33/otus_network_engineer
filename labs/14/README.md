@@ -79,3 +79,69 @@ Sending 5, 100-byte ICMP Echos to 10.4.0.1, timeout is 2 seconds:
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 ```
 
+### 2. Настроите DMVPN поверх IPSec между Москва и Чокурдах, Лабытнанги.
+
+Настроим IPSEC на R14 (Москва). Со стороны Чокурдах (R27) и Лабытнаги (R28) делается все аналогично.
+
+```
+R14(config)#crypto isakmp policy 10
+R14(config-isakmp)#encryption aes
+R14(config-isakmp)#hash md5
+R14(config-isakmp)#authentication pre-share
+R14(config-isakmp)#group 2
+R14(config-isakmp)#exit
+R14(config)#crypto isakmp key MY_PASS address 0.0.0.0
+
+R14(config)#crypto ipsec transform-set IPSEC_TS esp-aes esp-md5-hmac
+R14(cfg-crypto-trans)#mode transport
+R14(cfg-crypto-trans)#exit
+
+R14(config)#crypto ipsec profile IPSEC_PROFILE
+R14(ipsec-profile)#set transform-set IPSEC_TS
+
+R14(config)#int tunnel 0
+R14(config-if)#tunnel protection ipsec profile IPSEC_PROFILE
+```
+
+После выполнения настроек на всех маршрутизаторах, проверяем что IPSEC заработал:
+```
+R14#sh crypto isakmp sa
+IPv4 Crypto ISAKMP SA
+dst             src             state          conn-id status
+10.1.8.1        10.4.6.2        QM_IDLE           1001 ACTIVE
+10.1.8.1        10.4.8.2        QM_IDLE           1003 ACTIVE
+10.4.6.2        10.1.8.1        QM_IDLE           1002 ACTIVE
+
+R14#sh crypt sess
+Crypto session current status
+
+Interface: Tunnel0
+Session status: UP-ACTIVE
+Peer: 10.4.8.2 port 500
+  Session ID: 0
+  IKEv1 SA: local 10.1.8.1/500 remote 10.4.8.2/500 Active
+  IPSEC FLOW: permit 47 host 10.1.8.1 host 10.4.8.2
+        Active SAs: 2, origin: crypto map
+
+Interface: Tunnel0
+Session status: UP-ACTIVE
+Peer: 10.4.6.2 port 500
+  Session ID: 0
+  IKEv1 SA: local 10.1.8.1/500 remote 10.4.6.2/500 Active
+  Session ID: 0
+  IKEv1 SA: local 10.1.8.1/500 remote 10.4.6.2/500 Active
+  IPSEC FLOW: permit 47 host 10.1.8.1 host 10.4.6.2
+        Active SAs: 2, origin: crypto map
+
+```
+
+Для проверки связности пинганём из Москвы устройство в сети Лабытнаги:
+
+
+```
+R14#ping 10.3.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.3.0.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 5/5/8 ms
+```
